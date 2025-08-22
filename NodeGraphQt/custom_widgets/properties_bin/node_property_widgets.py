@@ -642,7 +642,7 @@ class PropertiesBinWidget(QtWidgets.QWidget):
     #: Signal emitted (node_id, prop_name, prop_value)
     property_changed = QtCore.Signal(str, str, object)
 
-    def __init__(self, parent=None, node_graph=None):
+    def __init__(self, parent=None, node_graph=None, hide_control=False, disable_limit=False):
         super(PropertiesBinWidget, self).__init__(parent)
         self.setWindowTitle('Properties Bin')
         self._prop_list = _PropertiesList()
@@ -651,6 +651,12 @@ class PropertiesBinWidget(QtWidgets.QWidget):
         self._limit.setMaximum(10)
         self._limit.setMinimum(0)
         self._limit.setValue(2)
+
+        if disable_limit:
+            self._limit.setMaximum(100)
+            self._limit.setValue(100)
+
+
         self._limit.valueChanged.connect(self.__on_limit_changed)
         self.resize(450, 400)
 
@@ -677,7 +683,8 @@ class PropertiesBinWidget(QtWidgets.QWidget):
         top_layout.addWidget(btn_clr)
 
         layout = QtWidgets.QVBoxLayout(self)
-        layout.addLayout(top_layout)
+        if not hide_control:
+            layout.addLayout(top_layout)
         layout.addWidget(self._prop_list, 1)
 
         # wire up node graph.
@@ -685,6 +692,7 @@ class PropertiesBinWidget(QtWidgets.QWidget):
         node_graph.node_double_clicked.connect(self.add_node)
         node_graph.nodes_deleted.connect(self.__on_nodes_deleted)
         node_graph.property_changed.connect(self.__on_graph_property_changed)
+        node_graph.property_cfg_changed.connect(self.__on_graph_property_cfg_changed)
 
     def __repr__(self):
         return '<{} object at {}>'.format(
@@ -762,6 +770,17 @@ class PropertiesBinWidget(QtWidgets.QWidget):
             property_widget.set_value(prop_value)
             self._block_signal = False
 
+    def __on_graph_property_cfg_changed(self, node, prop_name):
+        """
+        Slot function that updates the property bin from the node graph signal.
+
+        Args:
+            node (NodeGraphQt.NodeObject):
+            prop_name (str): node property name.
+            prop_value (object): node property value.
+        """
+        self.add_node(node)
+
     def __on_property_widget_changed(self, node_id, prop_name, prop_value):
         """
         Slot function triggered when a property widget value has changed.
@@ -817,11 +836,13 @@ class PropertiesBinWidget(QtWidgets.QWidget):
             return
 
         # remove pre-existing instance
+        itm_row = 0
         itm_find = self._prop_list.findItems(node.id, QtCore.Qt.MatchExactly)
         if itm_find:
+            itm_row = itm_find[0].row()
             self._prop_list.removeRow(itm_find[0].row())
 
-        self._prop_list.insertRow(0)
+        self._prop_list.insertRow(itm_row)
         rows = self._prop_list.rowCount() - 1
         
         if rows >= (self.limit()):
@@ -844,11 +865,11 @@ class PropertiesBinWidget(QtWidgets.QWidget):
                 )
             )
 
-        self._prop_list.setCellWidget(0, 0, prop_widget)
+        self._prop_list.setCellWidget(itm_row, 0, prop_widget)
 
         item = QtWidgets.QTableWidgetItem(node.id)
-        self._prop_list.setItem(0, 0, item)
-        self._prop_list.selectRow(0)
+        self._prop_list.setItem(itm_row, 0, item)
+        self._prop_list.selectRow(itm_row)
 
     def remove_node(self, node):
         """

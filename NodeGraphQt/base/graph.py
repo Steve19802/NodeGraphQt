@@ -113,6 +113,13 @@ class NodeGraph(QtCore.QObject):
     :parameters: :class:`NodeGraphQt.BaseNode`, str, object
     :emits: triggered node, property name, property value
     """
+    property_cfg_changed = QtCore.Signal(NodeObject, str)
+    """
+    Signal is triggered when a property has changed on a node.
+
+    :parameters: :class:`NodeGraphQt.BaseNode`, str, object
+    :emits: triggered node, property name
+    """
     data_dropped = QtCore.Signal(QtCore.QMimeData, QtCore.QPoint)
     """
     Signal is triggered when data has been dropped to the graph.

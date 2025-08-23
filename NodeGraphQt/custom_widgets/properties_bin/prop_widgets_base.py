@@ -236,6 +236,13 @@ class PropSpinBox(QtWidgets.QSpinBox):
         if value != self.get_value():
             self.setValue(value)
 
+    def set_min(self, min):
+        self.setMinimum(min)
+
+    def set_max(self, max):
+        self.setMaximum(max)
+
+
 
 class PropDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     """
@@ -270,6 +277,12 @@ class PropDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     def set_value(self, value):
         if value != self.get_value():
             self.setValue(value)
+
+    def set_min(self, min):
+        self.setMinimum(min)
+
+    def set_max(self, max):
+        self.setMaximum(max)
 
 
 # class PropPushButton(QtWidgets.QPushButton):

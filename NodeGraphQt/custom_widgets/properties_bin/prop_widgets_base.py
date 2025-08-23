@@ -213,7 +213,7 @@ class PropSpinBox(QtWidgets.QSpinBox):
     def __init__(self, parent=None):
         super(PropSpinBox, self).__init__(parent)
         self._name = None
-        self.setButtonSymbols(self.NoButtons)
+        #self.setButtonSymbols(self.NoButtons)
         self.valueChanged.connect(self._on_value_change)
 
     def __repr__(self):
@@ -248,7 +248,7 @@ class PropDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     def __init__(self, parent=None):
         super(PropDoubleSpinBox, self).__init__(parent)
         self._name = None
-        self.setButtonSymbols(self.NoButtons)
+        #self.setButtonSymbols(self.NoButtons)
         self.valueChanged.connect(self._on_value_change)
 
     def __repr__(self):

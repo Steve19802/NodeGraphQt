@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import re
-from packaging.version import LooseVersion
+from packaging.version import parse as LooseVersion
 
 from Qt import QtGui, QtCore
 

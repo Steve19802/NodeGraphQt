@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import math
-from distutils.version import LooseVersion
+from packaging.version import LooseVersion
 
 from Qt import QtGui, QtCore, QtWidgets
 

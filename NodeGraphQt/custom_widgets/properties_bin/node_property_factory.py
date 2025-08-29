@@ -21,7 +21,23 @@ class NodePropertyWidgetFactory(object):
     to the Properties bin.
     """
 
+    _instance = None
+
+    @classmethod
+    def instance(cls):
+        """
+        Returns the singleton instance of the factory
+        """
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
     def __init__(self):
+        if NodePropertyWidgetFactory._instance is not None:
+            raise RuntimeError(
+                "NodePropertyWidgetFactory is a singleton, use instance method"
+            )
+
         self._widget_mapping = {
             NodePropWidgetEnum.HIDDEN.value: None,
             # base widgets.
@@ -58,3 +74,14 @@ class NodePropertyWidgetFactory(object):
         """
         if widget_type in self._widget_mapping:
             return self._widget_mapping[widget_type]()
+
+    def register_property_widget_type(self, widget_type_id: int, widget):
+        """
+        Public method to register a new custom property widget
+
+        Args:
+            widget_type_id (int): A unique integer ID for the new widget type
+            widgle (BaseProperty): the cass of the new property widget
+        """
+        if widget_type_id not in self._widget_mapping:
+            self._widget_mapping[widget_type_id] = widget

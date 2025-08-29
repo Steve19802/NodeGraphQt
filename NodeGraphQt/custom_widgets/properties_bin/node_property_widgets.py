@@ -422,7 +422,7 @@ class NodePropEditorWidget(QtWidgets.QWidget):
             self.add_tab(tab)
 
         # property widget factory.
-        widget_factory = NodePropertyWidgetFactory()
+        widget_factory = NodePropertyWidgetFactory.instance()
 
         # populate tab properties.
         for tab in sorted(tab_mapping.keys()):
